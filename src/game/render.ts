@@ -866,7 +866,7 @@ export function renderFrame(rc: RenderContext): void {
     ctx.lineWidth = 2;
     for (const b of bails) {
       const t  = wfElapsed;
-      let bx   = b.x0 + b.vx * t;
+      const bx = b.x0 + b.vx * t;
       let by   = b.y0 + b.vy * t + 0.5 * b.gravity * t * t;
       let landed = false;
       if (by > groundY) { by = groundY; landed = true; }
