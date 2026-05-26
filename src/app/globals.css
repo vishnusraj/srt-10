@@ -3,25 +3,445 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #080808;
+  --foreground: #f0ede8;
+  --surface: #111111;
+  --muted: #6b6b6b;
+  --accent: #c8a97e;
+  --border: rgba(255, 255, 255, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    @apply scroll-smooth;
+    font-size: 16px;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1;
+  }
+
+  /* Cormorant Garamond — enable OpenType features for elegance */
+  .font-script {
+    font-feature-settings: "liga" 1, "calt" 1, "kern" 1, "onum" 1;
+    font-variant-ligatures: contextual common-ligatures;
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  /* Saira Stencil One — render as bold display headings */
+  .font-display {
+    font-weight: 700;
+    font-feature-settings: "kern" 1;
+    font-variant-ligatures: none;
+  }
+
+  /* Lenis smooth scroll */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+
+  /* Hide the native cursor only on fine-pointer (mouse) devices */
+  @media (pointer: fine) {
+    html,
+    * {
+      cursor: none !important;
+    }
+
+    /* During game mode, restore the system cursor so the close button is usable */
+    html.game-active,
+    html.game-active * {
+      cursor: auto !important;
+    }
+    html.game-active button,
+    html.game-active a,
+    html.game-active [role="button"] {
+      cursor: pointer !important;
+    }
+  }
+
+  /* Balanced text wrapping on headings */
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+
+  /* Typography resets */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--background);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Game pre-roll: Start button entrance + 3-2-1 countdown ───────────────── */
+@keyframes start-button-in {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.00); }
+}
+
+/* Same fade-in for buttons that live inside a flex container (i.e. NOT
+   absolutely positioned). Same easing as start-button-in, but no
+   translate — so the flex parent's align-items: center keeps the button
+   horizontally centred after the animation lands.                         */
+@keyframes result-button-in {
+  0%   { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1.00); }
+}
+
+@keyframes countdown-pop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.55); }
+  20%  { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
+  35%  { opacity: 1; transform: translate(-50%, -50%) scale(1.00); }
+  80%  { opacity: 1; transform: translate(-50%, -50%) scale(0.96); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.84); }
+}
+
+/* ── Required-runs pressure pulse — applied to the Need value when the
+   asking rate is high. Smooth glow throb + slight scale; deliberately
+   slow so it reads as "tension" not "alarm". ──────────────────────────── */
+@keyframes need-pressure-pulse {
+  0%   { transform: scale(1.00); text-shadow: 0 0 6px  rgba(255,120,120,0.30); }
+  50%  { transform: scale(1.08); text-shadow: 0 0 18px rgba(255,120,120,0.75); }
+  100% { transform: scale(1.00); text-shadow: 0 0 6px  rgba(255,120,120,0.30); }
+}
+
+/* ── Per-ball dot pulse on the over progression strip — single short
+   pop when a fresh ball lands in the over. ────────────────────────────── */
+@keyframes over-dot-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  35%  { transform: scale(1.45); opacity: 1; }
+  100% { transform: scale(1.00); opacity: 1; }
+}
+
+/* ── Grain texture ─────────────────────────────────────────────────────────── */
+/* Animate background-position (not transform) so the tile shifts inside the
+   layer instead of the layer itself sliding around — otherwise the section's
+   underlying solid color peeks through on one edge each jump. */
+@keyframes grain-shift {
+  0%   { background-position:   0px   0px; }
+  14%  { background-position: -23px  37px; }
+  28%  { background-position:  41px -18px; }
+  42%  { background-position: -16px  62px; }
+  57%  { background-position:  58px -31px; }
+  71%  { background-position: -38px  14px; }
+  85%  { background-position:  26px  48px; }
+  100% { background-position:   0px   0px; }
+}
+
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.04;
+  animation: grain-shift 7s steps(1) infinite;
+}
+
+/* ── Section entrance ──────────────────────────────────────────────────────── */
+/* Give every story section's inner content a very subtle bloom on enter.      */
+/* Applied manually via GSAP per section; this class is a shared baseline.     */
+.section-content {
+  will-change: transform, opacity;
+}
+
+/* ── Cinematic link underline ──────────────────────────────────────────────── */
+/* Any bare <a> not inside nav gets a thin accent underline that slides in.    */
+main a:not([class]) {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+main a:not([class])::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+main a:not([class]):hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Button press feedback ──────────────────────────────────────────────────── */
+button:active:not([disabled]) {
+  transform: scale(0.96);
+  transition: transform 0.06s ease;
+}
+
+/* ── Records section: per-format accent-tinted hover shadow ───────────────── */
+.records-card {
+  transition:
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 500ms ease;
+}
+
+.records-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  border-color: rgba(var(--accent), 0.35) !important;
+  box-shadow:
+    0 30px 70px -25px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(var(--accent), 0.12),
+    0 18px 60px -20px rgba(var(--accent), 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .records-card,
+  .records-card:hover,
+  .records-img-wrap,
+  .records-stat {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Records: stadium scoreboard panels with split-flap digit tiles ──────── */
+/* The container reads as a dark matte scoreboard with a subtle top bezel.    */
+.scoreboard-panel {
+  position: relative;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255,255,255,0.030) 0%, transparent 65%),
+    linear-gradient(180deg, #1c1c1c 0%, #0a0a0a 100%);
+  border-radius: 10px;
+  box-shadow:
+    0 28px 55px -22px rgba(0, 0, 0, 0.90),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+/* Thin yellow line separating the title strip from the rows — matches the
+   scoreboard's "section divider" feel without being too loud.               */
+.scoreboard-panel__divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(245, 196, 81, 0.42) 12%,
+    rgba(245, 196, 81, 0.42) 88%,
+    transparent 100%);
+}
+
+/* Split-flap digit display. A group of tiles + plain separators (comma,
+   dot, asterisk, letters) renders any value mostly-numeric or mixed.       */
+.flap-display {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 2px;
+  line-height: 1;
+  font-feature-settings: "tnum" 1;
+}
+
+.flap-tile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0.78em;
+  padding: 0.16em 0.10em;
+  background: linear-gradient(180deg,
+    #242424 0%,
+    #1c1c1c 49%,
+    #050505 51%,
+    #1a1a1a 100%);
+  border-radius: 4px;
+  color: #f6f6f6;
+  font-weight: 700;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.85),
+    0 2px 4px rgba(0, 0, 0, 0.55);
+}
+
+/* Mid-split line — the flap fold. Black hairline with a tiny highlight just
+   below it to fake the lower-half top edge catching light.                  */
+.flap-tile::before {
+  content: "";
+  position: absolute;
+  left: 5%; right: 5%;
+  top: 50%;
+  height: 1px;
+  background: #000;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateY(-0.5px);
+  z-index: 2;
+}
+
+.flap-tile__char {
+  position: relative;
+  z-index: 1;
+}
+
+/* Larger tiles for highlighted/headline stats */
+.flap-display--lg .flap-tile {
+  min-width: 0.94em;
+  padding: 0.18em 0.12em;
+}
+
+/* Separators (comma, period, asterisk, letters like "years"). Sit between
+   tiles in plain text — same height, lower contrast so digits dominate.    */
+.flap-sep {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.10em;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+}
+
+/* ── Records: subtle breathing scale on the sticky transparent figure ────── */
+@keyframes records-slow-zoom {
+  0%   { transform: scale(1.000); }
+  100% { transform: scale(1.045); }
+}
+.records-slow-zoom {
+  animation: records-slow-zoom 22s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  transform-origin: center center;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .records-slow-zoom { animation: none !important; }
+}
+
+/* ── Farewell: slow cinematic zoom on the watch-card poster ───────────────── */
+@keyframes farewell-slow-zoom {
+  0%   { transform: scale(1.08); }
+  100% { transform: scale(1.20); }
+}
+.farewell-slow-zoom {
+  animation: farewell-slow-zoom 22s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+/* ── Farewell: ambient pulse ring around the play button (always-on) ──────── */
+@keyframes farewell-pulse-ring {
+  0%   { transform: translate(-50%, -50%) scale(0.95); opacity: 0.55; }
+  70%  { transform: translate(-50%, -50%) scale(1.55); opacity: 0;    }
+  100% { transform: translate(-50%, -50%) scale(1.55); opacity: 0;    }
+}
+.farewell-pulse-ring {
+  animation: farewell-pulse-ring 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* ── Farewell: hover-only outward glow burst on the play button ───────────── */
+@keyframes farewell-hover-ring {
+  0%   { transform: translate(-50%, -50%) scale(0.85); opacity: 0;   }
+  20%  {                                            opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1.95); opacity: 0;   }
+}
+.group:hover .farewell-hover-ring {
+  animation: farewell-hover-ring 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .farewell-slow-zoom,
+  .farewell-pulse-ring,
+  .group:hover .farewell-hover-ring {
+    animation: none !important;
+  }
+}
+
+/* ── Focus-visible ring ─────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 1.5px solid rgba(200, 169, 126, 0.6);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Gallery: floating-memory drift ──────────────────────────────────────────
+   Slow, subtle translation + micro-rotation applied to each memory
+   fragment's INNER wrapper so it stacks with — and doesn't fight — the
+   scroll-driven transform written on the outer wrapper by JS. Four
+   variants give each fragment a slightly different rhythm. */
+@keyframes gallery-float-0 {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25%      { transform: translate3d(7px, -5px, 0) rotate(0.7deg); }
+  50%      { transform: translate3d(-4px, 6px, 0) rotate(-1.1deg); }
+  75%      { transform: translate3d(5px, 3px, 0) rotate(1.4deg); }
+}
+@keyframes gallery-float-1 {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33%      { transform: translate3d(-6px, 4px, 0) rotate(-1.2deg); }
+  66%      { transform: translate3d(8px, -3px, 0) rotate(0.9deg); }
+}
+@keyframes gallery-float-2 {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  20%      { transform: translate3d(4px, 7px, 0) rotate(1deg); }
+  55%      { transform: translate3d(-7px, -2px, 0) rotate(-0.6deg); }
+  80%      { transform: translate3d(2px, -6px, 0) rotate(1.3deg); }
+}
+@keyframes gallery-float-3 {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  40%      { transform: translate3d(6px, 5px, 0) rotate(-1deg); }
+  70%      { transform: translate3d(-5px, -4px, 0) rotate(1.5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-float { animation: none !important; }
+}
+
+/* ── Gallery story-modal scrollbar — thin gold-on-dark, minimal ───────────── */
+.story-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200, 169, 126, 0.30) rgba(255, 255, 255, 0.02);
+}
+.story-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.story-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+.story-scroll::-webkit-scrollbar-thumb {
+  background: rgba(200, 169, 126, 0.28);
+  border-radius: 3px;
+  transition: background 200ms ease;
+}
+.story-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 169, 126, 0.55);
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .full-screen {
+    @apply w-full min-h-screen;
+  }
+
+  .container-wide {
+    @apply max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20;
+  }
+
+  .border-subtle {
+    border-color: var(--border);
   }
 }
