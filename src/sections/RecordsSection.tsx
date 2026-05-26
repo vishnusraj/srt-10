@@ -222,13 +222,13 @@ export function RecordsSection() {
                   <div className="px-6 sm:px-8 pt-5 pb-4 flex items-baseline justify-between gap-4">
                     <h3
                       className="font-display uppercase tracking-[0.34em] text-[0.85rem] sm:text-[0.95rem]"
-                      style={{ color: "#f5c451" }}
+                      style={{ color: "rgba(255,255,255,0.92)" }}
                     >
                       {block.title}
                     </h3>
                     <span
                       className="font-mono text-[9.5px] uppercase tracking-[0.42em] tabular-nums"
-                      style={{ color: "rgba(245,196,81,0.55)" }}
+                      style={{ color: "rgba(255,255,255,0.55)" }}
                     >
                       {String(blockIdx + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(total).padStart(2, "0")}
                     </span>
@@ -248,7 +248,7 @@ export function RecordsSection() {
                       >
                         <span
                           className="font-mono uppercase tracking-[0.20em] text-[0.7rem] sm:text-[0.75rem] leading-tight"
-                          style={{ color: "rgba(245, 196, 81, 0.82)" }}
+                          style={{ color: "rgba(255, 255, 255, 0.82)" }}
                         >
                           {row.label}
                         </span>
@@ -295,13 +295,72 @@ export function RecordsSection() {
             directly on the page bg for the seamless feel. */}
         <div className="order-1 lg:order-2 relative">
           <div className="lg:sticky lg:top-0 h-[60vh] sm:h-[70vh] lg:h-screen w-full flex items-center justify-center">
+            {/* Ornamental swirls — slow-rotating SVG behind the figure.
+                Hand-drawn-feeling curves in brand gold, low opacity so they
+                read as atmosphere rather than competing with the portrait. */}
+            <svg
+              aria-hidden
+              viewBox="0 0 600 600"
+              className="records-swirls absolute inset-0 w-full h-full pointer-events-none"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <g
+                fill="none"
+                stroke="#f5c451"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Outer wide arc */}
+                <path
+                  d="M 90 300 C 90 160, 220 70, 360 90 S 540 230, 510 360"
+                  strokeWidth="0.9"
+                  opacity="0.34"
+                />
+                {/* Inner counter-arc */}
+                <path
+                  d="M 120 380 C 80 260, 180 130, 320 130 S 520 260, 490 380"
+                  strokeWidth="0.6"
+                  opacity="0.22"
+                />
+                {/* Top spiral flourish */}
+                <path
+                  d="M 410 80 C 470 90, 500 130, 480 175 C 465 210, 420 215, 405 190 C 395 172, 410 155, 430 158"
+                  strokeWidth="0.7"
+                  opacity="0.30"
+                />
+                {/* Bottom-left spiral flourish */}
+                <path
+                  d="M 130 510 C 90 490, 80 445, 115 420 C 145 400, 185 415, 190 445 C 193 465, 175 478, 158 472"
+                  strokeWidth="0.7"
+                  opacity="0.28"
+                />
+                {/* Small accent loop, mid-right */}
+                <path
+                  d="M 520 260 C 545 260, 555 285, 540 305 C 528 320, 508 315, 504 298"
+                  strokeWidth="0.55"
+                  opacity="0.26"
+                />
+                {/* Diagonal sweep across lower half */}
+                <path
+                  d="M 60 440 Q 230 520, 420 470 T 560 420"
+                  strokeWidth="0.5"
+                  opacity="0.20"
+                />
+                {/* Tiny dot accents along the outer arc */}
+                <circle cx="90"  cy="300" r="2.2" fill="#f5c451" stroke="none" opacity="0.45" />
+                <circle cx="510" cy="360" r="2.2" fill="#f5c451" stroke="none" opacity="0.45" />
+                <circle cx="430" cy="158" r="1.6" fill="#f5c451" stroke="none" opacity="0.55" />
+                <circle cx="158" cy="472" r="1.6" fill="#f5c451" stroke="none" opacity="0.55" />
+              </g>
+            </svg>
+
             <div className="records-slow-zoom relative w-full h-full">
               <Image
                 src="/images/records.png"
                 alt="Sachin Tendulkar"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-contain object-center"
+                className="records-sketch object-contain object-center"
                 priority
               />
             </div>

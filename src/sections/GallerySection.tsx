@@ -58,10 +58,7 @@ const FRAMES_A: Frame[] = [
     glow: "rgba(120,90,185,0.16)",
     glowX: "30%", glowY: "65%",
     accent: "#b4a4cc",
-    /* HQ stroke-play shot at SCG, Jan 2008 — Australia context fits the
-       1992 WC venue, 3888×2592 from Wikimedia Commons (CC BY-SA by
-       "Privatemusings"). See public/images/gallery/ATTRIBUTIONS.md. */
-    image: "/images/gallery/sachin_shot_scg_2008.jpg",
+    image: "/images/gallery/worldcup_debut.jpg",
     story: [
       "The first time the world saw him on its biggest stage. He was nineteen, slighter than most of the bowlers he faced, carrying a country's hopes like they weighed nothing. By the end of the tournament he had announced something. Cricket wasn't going to be the same.",
     ],
@@ -89,10 +86,7 @@ const FRAMES_A: Frame[] = [
     glow: "rgba(65,148,85,0.16)",
     glowX: "40%", glowY: "58%",
     accent: "#82c89a",
-    /* 14k-Test-runs milestone celebration, Wankhede Oct 2010 — 5120×3544
-       (CC BY-SA, Pulkit Sinha). The exact pose for a "milestone reached"
-       beat. See ATTRIBUTIONS.md. */
-    image: "/images/gallery/sachin_milestone_2010.jpg",
+    image: "/images/gallery/sachin_10000.jpg",
     story: [
       "At Indore the milestone they had been counting toward for a decade arrived almost quietly. A pulled boundary, a flat raise of the bat, a moment that felt like one in a long line of similar moments. Nobody else had been close. Nobody else would be for years.",
     ],
@@ -106,9 +100,7 @@ const FRAMES_A: Frame[] = [
     glow: "rgba(200,155,65,0.20)",
     glowX: "68%", glowY: "35%",
     accent: "#c8a055",
-    /* Pre-delivery focus shot, Wankhede Oct 2010 — 5120×3544
-       (CC BY-SA, Pulkit Sinha). See ATTRIBUTIONS.md. */
-    image: "/images/gallery/sachin_prepares_2010.jpg",
+    image: "/images/gallery/sachin_200.jpg",
     story: [
       "Against South Africa, he did what no one in 39 years of ODI cricket had managed. Two hundred not out off 147 balls. The crowd stayed on its feet for the last hour and a half. The number was new. The feeling was the one a billion people had been feeling for twenty years.",
     ],
@@ -139,10 +131,7 @@ const FRAMES_B: Frame[] = [
     glow: "rgba(90,110,200,0.14)",
     glowX: "35%", glowY: "42%",
     accent: "#9eacd8",
-    /* HQ drive shot, 2010 — 1625×806 (CC BY-SA, Pulkit Sinha). The
-       "foreign-soil drive" beat fits the Wanderer story even though year
-       doesn't match. See ATTRIBUTIONS.md. */
-    image: "/images/gallery/sachin_drives_2010.jpg",
+    image: "/images/gallery/sachin_82.avif",
     story: [
       "In New Zealand he opened the innings for the first time in ODIs, made 82 off 49 balls, and changed how India batted forever. Foreign conditions, foreign bowlers, foreign crowds — he treated them all the same way.",
     ],
@@ -156,9 +145,7 @@ const FRAMES_B: Frame[] = [
     glow: "rgba(185,140,58,0.15)",
     glowX: "72%", glowY: "60%",
     accent: "#c8a060",
-    /* HQ generic batting shot, SCG Feb 2012 — 1728×1152 (CC BY, Vijay
-       Chennupati). See ATTRIBUTIONS.md. */
-    image: "/images/gallery/sachin_batting.jpg",
+    image: "/images/gallery/sachin_eden_gardens.png",
     story: [
       "He carried the chase on his shoulders. Eden Gardens, ninety thousand people, the heat unbearable. He made 65 off 88 with the weight of a continent on him. When he was bowled, the stadium went silent — and eventually, ugly.",
     ],
@@ -203,10 +190,7 @@ const FRAMES_B: Frame[] = [
     glow: "rgba(200,169,126,0.24)",
     glowX: "50%", glowY: "38%",
     accent: "#c8a97e",
-    /* Wankhede during the first innings of the 2011 ICC World Cup Final —
-       2048×1536 (CC BY-SA 3.0, G patkar). The actual stadium on the
-       actual night. See ATTRIBUTIONS.md. */
-    image: "/images/gallery/wankhede_wcf_2011.jpg",
+    image: "/images/gallery/worldcup_2011.webp",
     story: [
       "At his home ground, after twenty-two years of waiting, India lifted the World Cup. He didn't score the runs that won it. He didn't need to. The team carried him on their shoulders around the boundary anyway. A boy's dream finally heavy in his arms.",
     ],

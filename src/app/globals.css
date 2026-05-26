@@ -275,7 +275,7 @@ button:active:not([disabled]) {
     #050505 51%,
     #1a1a1a 100%);
   border-radius: 4px;
-  color: #f6f6f6;
+  color: #f5c451;
   font-weight: 700;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
@@ -314,7 +314,7 @@ button:active:not([disabled]) {
   display: inline-flex;
   align-items: center;
   padding: 0 0.10em;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(245, 196, 81, 0.85);
   font-weight: 600;
 }
 
@@ -328,8 +328,37 @@ button:active:not([disabled]) {
   transform-origin: center center;
   will-change: transform;
 }
+
+/* Sketch / etching treatment on the records figure — strips colour, lifts
+   contrast, and warms the midtones toward the brand gold so the photo reads
+   as a tonal study rather than a colour snapshot. */
+.records-sketch {
+  filter:
+    grayscale(1)
+    contrast(1.22)
+    brightness(0.92)
+    sepia(0.42)
+    hue-rotate(-8deg)
+    saturate(1.15);
+}
+
+/* Slow rotation + gentle pulse on the ornamental swirls. Counter-rotates
+   against the figure's breathing zoom so the two motions feel like
+   separate layers of the same atmosphere. */
+@keyframes records-swirls-spin {
+  0%   { transform: rotate(0deg);   opacity: 0.88; }
+  50%  { transform: rotate(180deg); opacity: 1.00; }
+  100% { transform: rotate(360deg); opacity: 0.88; }
+}
+.records-swirls {
+  animation: records-swirls-spin 60s linear infinite;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .records-slow-zoom { animation: none !important; }
+  .records-swirls    { animation: none !important; }
 }
 
 /* ── Farewell: slow cinematic zoom on the watch-card poster ───────────────── */
